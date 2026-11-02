@@ -149,6 +149,11 @@ internal object Library {
         searching = true
         searchResults = null
         searchError = ""
+        // OneRealm 改动：搜索必须用登录的账号，没登录不去取游客歌曲
+        if (!NeteaseApi.loggedIn) {
+            searchResults = emptyList(); searchError = "请先登录网易云账号"; searching = false
+            return
+        }
         worker.execute {
             var error = ""
             val result = try {
