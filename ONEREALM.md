@@ -14,6 +14,8 @@
 4. **不含作者的服务配置**：构建产物里没有 `firebase.properties`。
 5. **本分支（`netease`）只保留网易云音乐**：删除 QQ 音乐、酷狗音乐的全部代码（音源、目录、登录、歌词、续期等）以及只给它们用的原生登录与请求类。登录界面、侧栏账号栏、一起听歌的歌曲编解码里涉及这两个平台的分支一并去掉。
 
+6. **搜索必须登录**：没登录网易云账号时搜索框不发请求，提示“请先登录网易云账号”（`musicui/Library.kt`）。
+
 ## 改动文件清单（以下为相对上一分支 `onerealm` 之外的基本改动；`netease` 分支另删除 `music/Qq*.kt`、`music/Kugou*.kt`、`NativeLogin.kt`、`NativeAccount.kt`、`AuthHttp.kt`，并修改 `MusicSources.kt`、`MusicPlayer.kt`、`ListenParty.kt`、`PartyTrackCodec.kt`、`I18n.kt`、`CoverCache.kt`、`MusicScreen.kt`、`Sidebar.kt`、`LoginDialog.kt`）
 
 新增：
