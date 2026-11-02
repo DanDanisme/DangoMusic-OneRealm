@@ -21,6 +21,7 @@ internal object PartyTrackCodec {
             MusicSource.NETEASE -> native.toLongOrNull()?.takeIf { it > 0 } ?: return null
             MusicSource.QQ -> if (validMid(native)) MusicSources.stableId(source,native) else return null
             MusicSource.KUGOU -> if (native.matches(Regex("[A-F0-9]{32}"))) MusicSources.stableId(source,native) else return null
+            MusicSource.BROADCAST -> return null   // 服务器推送的歌不进一起听歌房间
         }
         val media = data.text("mediaId").ifEmpty { native }
         val album = data.text("albumId")

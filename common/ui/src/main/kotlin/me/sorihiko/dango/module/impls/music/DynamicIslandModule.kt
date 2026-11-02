@@ -57,7 +57,7 @@ class DynamicIslandModule : Module() {
     @ModuleValue("Notify time", "How long song notifications stay (seconds)")
     private val notifyTime = FloatValue(1f, 8f, 3.5f, 1)
 
-    private enum class Kind { IDLE, SONG, UPDATE }
+    private enum class Kind { IDLE, SONG, UPDATE, NOTICE }
 
     private var context: GuiCanvas? = null
 
@@ -79,6 +79,17 @@ class DynamicIslandModule : Module() {
     private var lastState: MusicPlayer.State? = null
     /** 这次启动是否已经处理过新版本提醒 */
     private var updateHandled = false
+
+    /** 服务器公告的内容（OneRealm 改动）：标题一行，可选副标题一行 */
+    private var noticeTitle = ""
+    private var noticeSub = ""
+
+    /** 显示一条公告：[seconds] 秒后收回。公告会顶掉正在显示的歌曲卡片，下一次换歌 / 暂停时歌曲卡片再出来。 */
+    fun showNotice(title: String, sub: String, seconds: Float) {
+        noticeTitle = title
+        noticeSub = sub
+        show(Kind.NOTICE, (seconds.coerceIn(1f, 60f) * 1000).toLong())
+    }
 
     private val clock = SimpleDateFormat("HH:mm")
 
@@ -135,7 +146,7 @@ class DynamicIslandModule : Module() {
         if (t != null && System.currentTimeMillis() < tempUntil) {
             val ok = when (t) {
                 Kind.SONG -> MusicPlayer.current != null
-                Kind.UPDATE, Kind.IDLE -> true
+                Kind.UPDATE, Kind.IDLE, Kind.NOTICE -> true
             }
             if (ok) return t
         }
@@ -159,6 +170,10 @@ class DynamicIslandModule : Module() {
         Kind.UPDATE -> {
             val tw = max(width(updateTitle(), 13f, Theme.FONT_SEMIBOLD), width(I18n.text("Copy the download link in the player's settings"), 11f))
             (16f + 8f + 10f + tw.coerceAtMost(320f) + 18f) to 52f
+        }
+        Kind.NOTICE -> {
+            val tw = max(width(noticeTitle, 13f, Theme.FONT_SEMIBOLD), if (noticeSub.isEmpty()) 0f else width(noticeSub, 11f))
+            (16f + 8f + 10f + max(tw, 120f).coerceAtMost(420f) + 18f) to (if (noticeSub.isEmpty()) 38f else 52f)
         }
         Kind.IDLE -> if (musicIdle()) {
             val t = MusicPlayer.current!!
@@ -262,6 +277,7 @@ class DynamicIslandModule : Module() {
                 Kind.IDLE -> if (musicIdle()) drawMusicIdle(ctx, cb) else drawIdle(ctx, cb)
                 Kind.SONG -> drawSong(ctx, cb)
                 Kind.UPDATE -> drawUpdate(ctx, cb)
+                Kind.NOTICE -> drawNotice(ctx, cb)
             }
             ctx.popOpacity()
             ctx.popTransform()
@@ -308,6 +324,20 @@ class DynamicIslandModule : Module() {
         val tw = b.right - 18f - tx
         text(ctx, trim(updateTitle(), tw, 13f, Theme.FONT_SEMIBOLD), tx, b.y + 12f, 13f, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
         text(ctx, trim(I18n.text("Copy the download link in the player's settings"), tw, 11f), tx, b.y + 30f, 11f, Theme.TEXT_SECONDARY)
+    }
+
+    private fun drawNotice(ctx: GuiCanvas, b: LayoutBounds) {
+        val two = noticeSub.isNotEmpty()
+        val cy = if (two) b.y + 26f else b.y + b.height / 2f
+        ctx.drawShape(LayoutBounds(b.x + 16f, cy - 4f, 8f, 8f), ShapeStyle(Theme.ACCENT, 4f))
+        val tx = b.x + 34f
+        val tw = b.right - 18f - tx
+        if (two) {
+            text(ctx, trim(noticeTitle, tw, 13f, Theme.FONT_SEMIBOLD), tx, b.y + 12f, 13f, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
+            text(ctx, trim(noticeSub, tw, 11f), tx, b.y + 30f, 11f, Theme.TEXT_SECONDARY)
+        } else {
+            text(ctx, trim(noticeTitle, tw, 13f, Theme.FONT_SEMIBOLD), tx, cy - 13f * 0.39f, 13f, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
+        }
     }
 
     private fun drawSong(ctx: GuiCanvas, b: LayoutBounds) {

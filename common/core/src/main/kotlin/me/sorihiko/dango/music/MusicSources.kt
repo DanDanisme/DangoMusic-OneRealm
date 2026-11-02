@@ -7,7 +7,14 @@ import java.security.MessageDigest
 
 /** Persistent provider names; never use a process-local counter as a song identifier. */
 enum class MusicSource(val key: String, val label: String) {
-    NETEASE("netease", "NetEase"), QQ("qq", "QQ Music"), KUGOU("kugou", "Kugou");
+    NETEASE("netease", "NetEase"), QQ("qq", "QQ Music"), KUGOU("kugou", "Kugou"),
+    /** 服务器推送的音频链接（OneRealm 改动）：不是玩家能选的音源，不出现在音源菜单里 */
+    BROADCAST("broadcast", "Broadcast");
+
+    companion object {
+        /** 玩家能选、能登录的音源（不含服务器推送） */
+        @JvmStatic val selectable: List<MusicSource> = values().filter { it != BROADCAST }
+    }
 }
 
 /** Only locally-authored public messages belong here; never include a token or request URL. */
@@ -56,6 +63,7 @@ object MusicSources {
         MusicSource.NETEASE -> netease
         MusicSource.QQ -> QqMusicSource
         MusicSource.KUGOU -> KugouMusicSource
+        MusicSource.BROADCAST -> BroadcastSource
     }
 
     /** Compatibility ID for existing numeric UI fields. Identity is always [NeteaseTrack.key]. */

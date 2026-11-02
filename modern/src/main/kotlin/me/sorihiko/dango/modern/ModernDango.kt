@@ -29,6 +29,7 @@ object ModernDango {
         if (!McCompat.glAvailable) {
             McCompat.notifyNoGl()   // 只提示一次
             DangoMusic.callEvent(TickEvent)
+            me.sorihiko.dango.broadcast.BroadcastInbox.process()
             return
         }
         try {
@@ -37,6 +38,7 @@ object ModernDango {
             DangoLogger.error("Dango Music GL init failed: {}", t)
         }
         DangoMusic.callEvent(TickEvent)
+        me.sorihiko.dango.broadcast.BroadcastInbox.process()   // OneRealm：处理服务器推送的消息
     }
 
     /**

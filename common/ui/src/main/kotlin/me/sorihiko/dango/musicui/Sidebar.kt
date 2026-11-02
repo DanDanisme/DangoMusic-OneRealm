@@ -320,7 +320,7 @@ internal class Sidebar(private val screen: MusicScreen) {
 
     /** 音源菜单的上沿（菜单高度：三个音源 + 已登录时的分隔线和"退出登录"） */
     private fun menuTop(side: LayoutBounds): Float {
-        val h = 8f + MusicSource.values().size * MENU_ITEM_H + (if (loggedIn(MusicSources.selected)) 9f + MENU_ITEM_H else 0f) + 8f
+        val h = 8f + MusicSource.selectable.size * MENU_ITEM_H + (if (loggedIn(MusicSources.selected)) 9f + MENU_ITEM_H else 0f) + 8f
         return side.bottom - 46f - 6f - h
     }
 
@@ -364,7 +364,7 @@ internal class Sidebar(private val screen: MusicScreen) {
     private fun drawSourceMenu(side: LayoutBounds, menu: LayoutBounds) {
         val ctx = ui.ctx
         val current = MusicSources.selected
-        val sources = MusicSource.values()
+        val sources = MusicSource.selectable
         val itemH = MENU_ITEM_H
         val canLogOut = loggedIn(current)
         val full = LayoutBounds(side.x + 6f, menuTop(side), side.width - 12f, 0f)

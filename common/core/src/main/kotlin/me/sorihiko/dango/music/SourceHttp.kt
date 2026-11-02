@@ -29,7 +29,7 @@ internal object SourceHttp {
                 conn.connectTimeout = 8000
                 conn.readTimeout = 15000
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0")
-                conn.setRequestProperty("Referer", referer)
+                if (referer.isNotEmpty()) conn.setRequestProperty("Referer", referer)
                 conn.setRequestProperty("Accept-Encoding", "identity")
                 val code = conn.responseCode
                 if (code in 300..399) {
