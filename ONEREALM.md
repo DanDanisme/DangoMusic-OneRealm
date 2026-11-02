@@ -1,39 +1,39 @@
-# 与上游的差异
+# Differences from upstream
 
-本仓库基于 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2（提交 `e61f461`）修改，按 **GPL-3.0** 发布，原作者的版权与协议文件（`LICENSE`）保持不变。这不是官方版本，改动由一方世界（OneRealm）维护。
+This repository is a modified version of [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2 (commit `e61f461`), released under the **GPL-3.0**. The original copyright notices and the license file (`LICENSE`) are unchanged. This is not an official release; the changes are maintained by OneRealm.
 
-首次修改日期：2026-11-03。目前只构建 `modern/versions/1.21.11-neoforge`（Minecraft 1.21.11 + NeoForge），其余版本目录与上游一致。
+Date of first modification: 2026-11-03. Only `modern/versions/1.21.11-neoforge` (Minecraft 1.21.11 + NeoForge) is built at the moment; the other version directories are identical to upstream.
 
-## 本版本的特点
+## What this edition does
 
-- 仅保留网易云音乐，必须登录网易云账号后才能使用搜索功能、搜索歌曲。
-- 灵动岛集成通知功能，通知文字支持颜色。
-- 支持接收并播放在线音频，可同时显示歌词。
-- 不包含首页和排行榜；一起听歌功能暂未开放；检查更新默认关闭；歌曲卡片和左上角歌曲信息默认关闭。
-- 构建产物不含上游作者的在线服务配置。
+- Keeps NetEase Cloud Music only. Searching for songs requires logging in to a NetEase Cloud Music account first.
+- The Dynamic Island integrates notifications, with colored text support.
+- Receives and plays online audio, with lyrics shown alongside.
+- No home page or charts. Listen Together is not available yet. Update checking is off by default. The song card and the top-left song info are off by default.
+- Build output does not contain the upstream author's online service configuration.
 
-## 与上游相比改动的文件
+## Files changed relative to upstream
 
-新增：
+Added:
 
-- `common/core/.../music/BroadcastSource.kt`：在线音频音源
-- `common/ui/.../broadcast/BroadcastInbox.kt`：外部消息接收与处理
-- `common/ui/.../broadcast/ColorText.kt`：通知文字颜色解析
-- `modern/versions/1.21.11-neoforge/.../neoforge/BroadcastPayload.java`：消息载荷
+- `common/core/.../music/BroadcastSource.kt`: online audio source
+- `common/ui/.../broadcast/BroadcastInbox.kt`: external message intake and handling
+- `common/ui/.../broadcast/ColorText.kt`: notification text color parsing
+- `modern/versions/1.21.11-neoforge/.../neoforge/BroadcastPayload.java`: message payload
 
-修改：
+Modified:
 
-- `common/core/.../music/MusicPlayer.kt`、`MusicSources.kt`、`SourceHttp.kt`
-- `common/core/.../party/ListenParty.kt`、`PartyTrackCodec.kt`
+- `common/core/.../music/MusicPlayer.kt`, `MusicSources.kt`, `SourceHttp.kt`
+- `common/core/.../party/ListenParty.kt`, `PartyTrackCodec.kt`
 - `common/core/.../i18n/I18n.kt`
-- `common/ui/.../module/impls/music/DynamicIslandModule.kt`、`LyricsModule.kt`、`NeteaseMusicModule.kt`
-- `common/ui/.../music/MusicScreen.kt`、`CoverCache.kt`
-- `common/ui/.../musicui/Library.kt`、`SettingsPage.kt`、`Sidebar.kt`、`LoginDialog.kt`
+- `common/ui/.../module/impls/music/DynamicIslandModule.kt`, `LyricsModule.kt`, `NeteaseMusicModule.kt`
+- `common/ui/.../music/MusicScreen.kt`, `CoverCache.kt`
+- `common/ui/.../musicui/Library.kt`, `SettingsPage.kt`, `Sidebar.kt`, `LoginDialog.kt`
 - `modern/src/main/kotlin/.../ModernDango.kt`
 - `modern/versions/1.21.11-neoforge/.../neoforge/DangoMusicNeoForge.java`
 
-删除（本版本不包含 QQ 音乐、酷狗音乐的实现）：
+Deleted (this edition does not include the QQ Music or Kugou implementations):
 
-- `common/core/.../music/` 下的 `Qq*.kt`、`Kugou*.kt`、`NativeLogin.kt`、`NativeAccount.kt`、`AuthHttp.kt`
+- `Qq*.kt`, `Kugou*.kt`, `NativeLogin.kt`, `NativeAccount.kt` and `AuthHttp.kt` under `common/core/.../music/`
 
-逐行差异请看 `git diff e61f461..HEAD`。
+For the line-by-line differences, run `git diff e61f461..HEAD`.

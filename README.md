@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/logo.png" alt="Dango Music" width="220"></p>
 
-<h1 align="center">Dango Music · 一方世界版</h1>
+<h1 align="center">Dango Music · OneRealm Edition</h1>
 
 <p align="center"><em>Minecraft 里的纯净网易云音乐播放器：液态玻璃界面、3D 歌词、灵动岛。</em></p>
 
