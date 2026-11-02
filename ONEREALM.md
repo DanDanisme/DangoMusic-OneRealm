@@ -1,46 +1,39 @@
-# 一方世界改版说明（OneRealm fork）
+# 与上游的差异
 
-本仓库是 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2（提交 `e61f461`）的修改版，按 **GPL-3.0** 发布，原作者版权与协议文件（`LICENSE`）保持不变。**这不是官方版本**，改动由一方世界（OneRealm）自行维护，有问题请不要去打扰原作者。
+本仓库基于 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2（提交 `e61f461`）修改，按 **GPL-3.0** 发布，原作者的版权与协议文件（`LICENSE`）保持不变。这不是官方版本，改动由一方世界（OneRealm）维护。
 
-目前只构建 `modern/versions/1.21.11-neoforge`（Minecraft 1.21.11 + NeoForge），其余版本目录保留上游原样，未改动也未验证。
+首次修改日期：2026-11-03。目前只构建 `modern/versions/1.21.11-neoforge`（Minecraft 1.21.11 + NeoForge），其余版本目录与上游一致。
 
-## 改动概览（相对 v1.7.2，首次修改于 2026-11-03）
+## 本版本的特点
 
-1. **服务器推送**：新增 NeoForge 自定义消息通道 `onerealm:broadcast`，服务器可以向客户端发 JSON 消息：
-   - `notice`：在灵动岛显示公告（标题、副标题、秒数），支持 `&0-f`、`&#RRGGBB`、`&r` 颜色标记；
-   - `prepare` / `play` / `stop`：预加载并播放服务器给的 MP3 链接，可带歌词（LRC）、时长、起点位置。
-2. **新音源 `BROADCAST`**：专门承载服务器推送的音乐，不出现在音源选择里，不能进入一起听歌。下载后会检查是否真的是 MP3。
-3. **界面精简**：移除首页和排行榜；侧栏默认进“正在播放”；一起听歌入口保留但显示“暂未开放”，不再连接任何云端；检查更新默认关闭并隐藏设置项；歌曲卡片、左上角歌曲信息及封面的设置项隐藏，默认关闭。
-4. **不含作者的服务配置**：构建产物里没有 `firebase.properties`。
-5. **本分支（`netease`）只保留网易云音乐**：删除 QQ 音乐、酷狗音乐的全部代码（音源、目录、登录、歌词、续期等）以及只给它们用的原生登录与请求类。登录界面、侧栏账号栏、一起听歌的歌曲编解码里涉及这两个平台的分支一并去掉。
+- 仅保留网易云音乐，必须登录网易云账号后才能使用搜索功能、搜索歌曲。
+- 灵动岛集成通知功能，通知文字支持颜色。
+- 支持接收并播放在线音频，可同时显示歌词。
+- 不包含首页和排行榜；一起听歌功能暂未开放；检查更新默认关闭；歌曲卡片和左上角歌曲信息默认关闭。
+- 构建产物不含上游作者的在线服务配置。
 
-6. **搜索必须登录**：没登录网易云账号时搜索框不发请求，提示“请先登录网易云账号”（`musicui/Library.kt`）。
-
-## 改动文件清单（以下为相对上一分支 `onerealm` 之外的基本改动；`netease` 分支另删除 `music/Qq*.kt`、`music/Kugou*.kt`、`NativeLogin.kt`、`NativeAccount.kt`、`AuthHttp.kt`，并修改 `MusicSources.kt`、`MusicPlayer.kt`、`ListenParty.kt`、`PartyTrackCodec.kt`、`I18n.kt`、`CoverCache.kt`、`MusicScreen.kt`、`Sidebar.kt`、`LoginDialog.kt`）
+## 与上游相比改动的文件
 
 新增：
 
-- `common/core/.../music/BroadcastSource.kt`：BROADCAST 音源
-- `common/ui/.../broadcast/BroadcastInbox.kt`：消息队列与处理
-- `common/ui/.../broadcast/ColorText.kt`：颜色标记解析
+- `common/core/.../music/BroadcastSource.kt`：在线音频音源
+- `common/ui/.../broadcast/BroadcastInbox.kt`：外部消息接收与处理
+- `common/ui/.../broadcast/ColorText.kt`：通知文字颜色解析
 - `modern/versions/1.21.11-neoforge/.../neoforge/BroadcastPayload.java`：消息载荷
 
 修改：
 
-- `common/core/.../music/MusicPlayer.kt`、`MusicSources.kt`、`SourceHttp.kt`、`party/PartyTrackCodec.kt`
+- `common/core/.../music/MusicPlayer.kt`、`MusicSources.kt`、`SourceHttp.kt`
+- `common/core/.../party/ListenParty.kt`、`PartyTrackCodec.kt`
+- `common/core/.../i18n/I18n.kt`
 - `common/ui/.../module/impls/music/DynamicIslandModule.kt`、`LyricsModule.kt`、`NeteaseMusicModule.kt`
-- `common/ui/.../music/MusicScreen.kt`、`musicui/Library.kt`、`SettingsPage.kt`、`Sidebar.kt`
+- `common/ui/.../music/MusicScreen.kt`、`CoverCache.kt`
+- `common/ui/.../musicui/Library.kt`、`SettingsPage.kt`、`Sidebar.kt`、`LoginDialog.kt`
 - `modern/src/main/kotlin/.../ModernDango.kt`
 - `modern/versions/1.21.11-neoforge/.../neoforge/DangoMusicNeoForge.java`
 
+删除（本版本不包含 QQ 音乐、酷狗音乐的实现）：
+
+- `common/core/.../music/` 下的 `Qq*.kt`、`Kugou*.kt`、`NativeLogin.kt`、`NativeAccount.kt`、`AuthHttp.kt`
+
 逐行差异请看 `git diff e61f461..HEAD`。
-
-## 构建
-
-```
-export JAVA_HOME=<JDK 21>
-cd modern
-sh ./gradlew --no-daemon :1.21.11-neoforge:build
-```
-
-第一次构建要下载大量依赖，耗时很长（实测约 46 分钟），之后增量构建 1–3 分钟。产物在 `modern/versions/1.21.11-neoforge/build/libs/`。

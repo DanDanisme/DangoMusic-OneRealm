@@ -1,142 +1,35 @@
-> **这是修改版。** 本仓库基于 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2，由一方世界（OneRealm）修改，按 GPL-3.0 发布。改了什么见 [ONEREALM.md](ONEREALM.md)。不是官方版本，问题请勿打扰原作者。
-
 <p align="center"><img src="docs/logo.png" alt="Dango Music" width="220"></p>
 
-<h1 align="center">Dango Music</h1>
+<h1 align="center">Dango Music · 一方世界版</h1>
 
-<p align="center"><em>A Minecraft mod that brings NetEase Cloud Music, QQ Music and Kugou into the game: liquid-glass player, 3D in-world lyrics, song card HUD, Dynamic Island and Listen Together.</em></p>
+<p align="center"><em>Minecraft 里的纯净网易云音乐播放器：液态玻璃界面、3D 歌词、灵动岛。</em></p>
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/Sorihiko/DangoMusic?style=for-the-badge&label=license&labelColor=555555&color=FF5C8A" alt="License"></a>
-  <a href="https://github.com/Sorihiko/DangoMusic/stargazers"><img src="https://img.shields.io/github/stars/Sorihiko/DangoMusic?style=for-the-badge&label=stars&labelColor=555555&color=FF5C8A" alt="Stars"></a>
-  <a href="https://github.com/Sorihiko/DangoMusic/releases"><img src="https://img.shields.io/github/v/release/Sorihiko/DangoMusic?style=for-the-badge&label=dango&labelColor=555555&color=FF5C8A" alt="Version"></a>
-</p>
-
-在 Minecraft 里听网易云音乐 / QQ 音乐 / 酷狗的 mod：液态玻璃播放器、漂浮在世界里的 3D 歌词、Song card、灵动岛，还能和朋友一起听歌。
-
-<p align="center"><img src="docs/screenshots/lyrics-3d.jpg" alt="3D 歌词" width="100%"></p>
-
-| | | |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/home.jpg" alt="首页"> | <img src="docs/screenshots/playlist.jpg" alt="歌单"> | <img src="docs/screenshots/coverflow.jpg" alt="封面墙"> |
+> **这是修改版。** 本项目基于 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2 修改而来，按 **GPL-3.0** 发布，保留原作者的版权与协议。它不是官方版本，使用中遇到问题请不要打扰原作者。与上游的差异见 [ONEREALM.md](ONEREALM.md)。
 
 ## 功能
 
-- **播放器**（默认按 `M`，主菜单也能打开）：推荐、排行榜、我的歌单、搜索，列表 / 封面墙两种视图
-- **三个音源**：网易云 / QQ 音乐 / 酷狗，都在游戏内扫码登录（会员歌曲需要对应平台的会员）
-- **歌词**：逐字歌词，3D 歌词漂浮在世界里，带发光、抖动、文闪等效果
-- **Song card / 灵动岛**：屏幕上显示正在播放
-- **一起听歌**：分享房间码，所有人同步到同一首歌、同一秒；不在同一个服务器、不是同一个 MC 版本也能一起听，国内网络也能用
-- 设置都在播放器侧栏的 ⚙ 里，可以绑定快捷键
+- **仅保留网易云音乐**，在游戏内扫码登录
+- **登录后才能搜索**歌曲，并使用自己账号里的歌单
+- **液态玻璃播放器**（默认按 `M`）：歌单列表 / 封面墙两种视图，设置都在侧栏的 ⚙ 里
+- **3D 歌词**：逐字歌词漂浮在世界里，带发光、抖动、文闪等效果
+- **灵动岛**：显示正在播放的歌曲，并集成通知功能
+- **在线播放**：接收并播放在线音频，同步显示歌词
+- 一起听歌：暂未开放
 
-更新内容见 [1.7.2 更新日志](docs/CHANGELOG-1.7.2.md)。
+## 支持版本
 
-## 安装
-
-在 [Releases](https://github.com/Sorihiko/DangoMusic/releases) 下载对应版本的 jar，放进 `.minecraft/mods`，进游戏按 `M`。
-
-| Minecraft | Fabric（另需 [Fabric API](https://modrinth.com/mod/fabric-api)） | Forge / NeoForge |
-|---|---|---|
-| 1.8.9 | — | `+1.8.9.jar`（Forge 11.15.1.2318，或 Lunar 等客户端） |
-| 1.20.1 | `+1.20.1-fabric.jar` | `+1.20.1-forge.jar`（Forge 47.x） |
-| 1.21.1 | `+1.21.1-fabric.jar` | `+1.21.1-neoforge.jar` |
-| 1.21.11 | `+1.21.11-fabric.jar` | `+1.21.11-neoforge.jar` |
-| 26.1.2 | `+26.1.2-fabric.jar` | `+26.1.2-neoforge.jar` |
-| 26.2 | `+26.2-fabric.jar` | `+26.2-neoforge.jar` |
-| 26.3 | `+26.3-fabric.jar` | `+26.3-neoforge.jar` |
-
-26.2 / 26.3 选 Vulkan 时也能正常显示（3D 歌词会盖在手上）。配置和登录信息存在 `.minecraft/config/dangomusic/`。
+目前只构建 Minecraft **1.21.11 + NeoForge**。仓库里其余版本目录保留上游原样，未改动也未验证。
 
 ## 构建
 
-需要 JDK 8、21、25，运行 `build-all.bat`，jar 收集到 `dist/`（JDK 不在默认位置时设置 `DANGO_JDK21` / `DANGO_JDK25`）。
-
-<details>
-<summary>启用一起听歌（Firebase）</summary>
-
-1. 在 [Firebase 控制台](https://console.firebase.google.com/) 新建项目，开启 **匿名登录**，创建 **Realtime Database**
-2. 把 `firebase.properties.example` 复制成 `common/core/src/main/resources/firebase.properties`，填上 `apiKey` 和 `databaseUrl`
-3. 数据库规则（也在 [database.rules.json](database.rules.json)，限制了每个字段的类型和长度）：
-
-```json
-{
-  "rules": {
-    "rooms": {
-      "$code": {
-        ".read": "auth != null",
-        ".write": "auth != null && (!data.exists() || data.child('host').val() === auth.uid || data.child('members').child(data.child('host').val()).child('lastSeen').val() < now - 600000)",
-        ".validate": "$code.length <= 16 && newData.hasChildren(['host']) && (newData.child('host').val() === auth.uid || newData.child('host').val() === data.child('host').val())",
-        "host": { ".validate": "newData.isString() && newData.val().length <= 128" },
-        "hostName": { ".validate": "newData.isString() && newData.val().length <= 64" },
-        "protocol": { ".validate": "newData.isNumber()" },
-        "memberControl": { ".validate": "newData.isBoolean()" },
-        "createdAt": { ".validate": "newData.isNumber()" },
-        "members": {
-          "$uid": {
-            ".write": "auth != null && auth.uid === $uid && root.child('rooms').child($code).exists()",
-            ".validate": "$uid.length <= 128 && newData.hasChildren(['lastSeen'])",
-            "name": { ".validate": "newData.isString() && newData.val().length <= 64" },
-            "lastSeen": { ".validate": "newData.isNumber()" },
-            "$other": { ".validate": false }
-          }
-        },
-        "state": {
-          "trackId": { ".validate": "newData.isNumber()" },
-          "source": { ".validate": "newData.isString() && newData.val().length <= 16" },
-          "nativeId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "mediaId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "albumId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "name": { ".validate": "newData.isString() && newData.val().length <= 1024" },
-          "artists": { ".validate": "newData.isString() && newData.val().length <= 2048" },
-          "cover": { ".validate": "newData.isString() && newData.val().length <= 4096" },
-          "duration": { ".validate": "newData.isNumber()" },
-          "pos": { ".validate": "newData.isNumber()" },
-          "playing": { ".validate": "newData.isBoolean()" },
-          "at": { ".validate": "newData.isNumber()" },
-          "$other": { ".validate": false }
-        },
-        "req": {
-          ".write": "auth != null && data.parent().child('members').child(auth.uid).exists() && data.parent().child('memberControl').val() === true",
-          "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "by": { ".validate": "newData.isString() && newData.val() === auth.uid" },
-          "byName": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "op": { ".validate": "newData.isString() && newData.val().length <= 16" },
-          "trackId": { ".validate": "newData.isNumber()" },
-          "source": { ".validate": "newData.isString() && newData.val().length <= 16" },
-          "nativeId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "mediaId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "albumId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-          "name": { ".validate": "newData.isString() && newData.val().length <= 1024" },
-          "artists": { ".validate": "newData.isString() && newData.val().length <= 2048" },
-          "cover": { ".validate": "newData.isString() && newData.val().length <= 4096" },
-          "duration": { ".validate": "newData.isNumber()" },
-          "pos": { ".validate": "newData.isNumber()" },
-          "at": { ".validate": "newData.isNumber()" },
-          "$other": { ".validate": false }
-        },
-        "$other": { ".validate": false }
-      }
-    },
-    "clock": {
-      "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid",
-        ".validate": "newData.isNumber()"
-      }
-    }
-  }
-}
+```
+export JAVA_HOME=<JDK 21>
+cd modern
+sh ./gradlew --no-daemon :1.21.11-neoforge:build
 ```
 
-不配置也能构建，只是一起听歌不可用；只有连同一个 Firebase 项目的人才能一起听。
+第一次构建要下载大量依赖，耗时很长（实测约 46 分钟），之后增量构建 1–3 分钟。产物在 `modern/versions/1.21.11-neoforge/build/libs/`。
 
-不想用 Firebase、想自己架服务器的，可以看第三方的自建服务端 [dango-party-server](https://github.com/Tea-chabai/dango-party-server)（非官方维护）。
-</details>
+## 协议
 
-## 说明
-
-使用各音乐平台的非官方接口，仅供个人学习交流，歌曲版权归各平台和版权方所有。
-
-第三方：[Inter](https://github.com/rsms/inter)（OFL 1.1）、[JLayer](https://central.sonatype.com/artifact/javazoom/jlayer/1.0.1)（LGPL）、[ZXing](https://github.com/zxing/zxing)（Apache 2.0）、Kotlin 标准库（Apache 2.0）。
-
-许可证：[GPL-3.0](LICENSE)
+GPL-3.0，见 [LICENSE](LICENSE)。原作者：Sorihiko。
