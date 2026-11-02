@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/logo.png" alt="Dango Music" width="220"></p>
 
-<h1 align="center">Dango Music · OneRealm Edition</h1>
+<h1 align="center">Dango Music · Modified version</h1>
 
 <p align="center"><em>Minecraft 里的纯净网易云音乐播放器：液态玻璃界面、3D 歌词、灵动岛。</em></p>
 
@@ -16,19 +16,9 @@
 - **在线播放**：接收并播放在线音频，同步显示歌词
 - 一起听歌：暂未开放
 
-## 支持版本
+## 运行环境
 
-目前只构建 Minecraft **1.21.11 + NeoForge**。仓库里其余版本目录保留上游原样，未改动也未验证。
-
-## 构建
-
-```
-export JAVA_HOME=<JDK 21>
-cd modern
-sh ./gradlew --no-daemon :1.21.11-neoforge:build
-```
-
-第一次构建要下载大量依赖，耗时很长（实测约 46 分钟），之后增量构建 1–3 分钟。产物在 `modern/versions/1.21.11-neoforge/build/libs/`。
+Minecraft 1.21.11 · NeoForge
 
 ## 协议
 

@@ -37,3 +37,13 @@ Deleted (this edition does not include the QQ Music or Kugou implementations):
 - `Qq*.kt`, `Kugou*.kt`, `NativeLogin.kt`, `NativeAccount.kt` and `AuthHttp.kt` under `common/core/.../music/`
 
 For the line-by-line differences, run `git diff e61f461..HEAD`.
+
+## Building
+
+```
+export JAVA_HOME=<JDK 21>
+cd modern
+sh ./gradlew --no-daemon :1.21.11-neoforge:build
+```
+
+The first build downloads many dependencies and takes a long time; later builds are incremental. Output is in `modern/versions/1.21.11-neoforge/build/libs/`.
