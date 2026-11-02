@@ -304,6 +304,13 @@ object MusicPlayer {
                 else -> SourceHttp.bytes(url.url, if (track.source == MusicSource.QQ) "https://y.qq.com/" else "https://m.kugou.com/")
             }
             if (gen != generation) return
+            if (track.source == MusicSource.BROADCAST) {
+                DangoLogger.info("Broadcast audio downloaded: {} bytes, starts with {}", bytes?.size ?: -1,
+                    bytes?.take(4)?.joinToString("") { "%02x".format(it) } ?: "-")
+                if (bytes == null || !BroadcastSource.looksLikeMp3(bytes)) {
+                    return fail(gen, "Not an MP3 file (the link may be blocked, expired or a web page)")
+                }
+            }
             if (bytes == null || bytes.size < 10_000) {
                 return fail(gen, if (track.source != MusicSource.NETEASE) "Unable to download this guest MP3. Try another song."
                     else if (NeteaseApi.loggedIn) "这首歌没有播放权限" else "需要登录才能播放（VIP 歌曲）")

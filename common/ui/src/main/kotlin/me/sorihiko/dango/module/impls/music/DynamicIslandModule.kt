@@ -7,6 +7,7 @@ import me.sorihiko.dango.DangoMusic
 import me.sorihiko.dango.event.EventHandler
 import me.sorihiko.dango.events.HudRenderEvent
 import me.sorihiko.dango.font.MixedText
+import me.sorihiko.dango.broadcast.ColorText
 import me.sorihiko.dango.gfx.GuiCanvas
 import me.sorihiko.dango.gfx.Texture
 import me.sorihiko.dango.module.Category
@@ -81,13 +82,13 @@ class DynamicIslandModule : Module() {
     private var updateHandled = false
 
     /** 服务器公告的内容（OneRealm 改动）：标题一行，可选副标题一行 */
-    private var noticeTitle = ""
-    private var noticeSub = ""
+    private var noticeTitle: List<ColorText.Seg> = emptyList()
+    private var noticeSub: List<ColorText.Seg> = emptyList()
 
     /** 显示一条公告：[seconds] 秒后收回。公告会顶掉正在显示的歌曲卡片，下一次换歌 / 暂停时歌曲卡片再出来。 */
     fun showNotice(title: String, sub: String, seconds: Float) {
-        noticeTitle = title
-        noticeSub = sub
+        noticeTitle = ColorText.parse(title)
+        noticeSub = ColorText.parse(sub)
         show(Kind.NOTICE, (seconds.coerceIn(1f, 60f) * 1000).toLong())
     }
 
@@ -172,7 +173,7 @@ class DynamicIslandModule : Module() {
             (16f + 8f + 10f + tw.coerceAtMost(320f) + 18f) to 52f
         }
         Kind.NOTICE -> {
-            val tw = max(width(noticeTitle, 13f, Theme.FONT_SEMIBOLD), if (noticeSub.isEmpty()) 0f else width(noticeSub, 11f))
+            val tw = max(width(ColorText.plain(noticeTitle), 13f, Theme.FONT_SEMIBOLD), if (noticeSub.isEmpty()) 0f else width(ColorText.plain(noticeSub), 11f))
             (16f + 8f + 10f + max(tw, 120f).coerceAtMost(420f) + 18f) to (if (noticeSub.isEmpty()) 38f else 52f)
         }
         Kind.IDLE -> if (musicIdle()) {
@@ -329,15 +330,34 @@ class DynamicIslandModule : Module() {
     private fun drawNotice(ctx: GuiCanvas, b: LayoutBounds) {
         val two = noticeSub.isNotEmpty()
         val cy = if (two) b.y + 26f else b.y + b.height / 2f
-        ctx.drawShape(LayoutBounds(b.x + 16f, cy - 4f, 8f, 8f), ShapeStyle(Theme.ACCENT, 4f))
+        // 圆点用标题里第一个带颜色的字的颜色，没有就用强调色
+        val dot = noticeTitle.firstOrNull { it.color != null }?.color ?: Theme.ACCENT
+        ctx.drawShape(LayoutBounds(b.x + 16f, cy - 4f, 8f, 8f), ShapeStyle(dot, 4f))
         val tx = b.x + 34f
         val tw = b.right - 18f - tx
         if (two) {
-            text(ctx, trim(noticeTitle, tw, 13f, Theme.FONT_SEMIBOLD), tx, b.y + 12f, 13f, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
-            text(ctx, trim(noticeSub, tw, 11f), tx, b.y + 30f, 11f, Theme.TEXT_SECONDARY)
+            coloredText(ctx, noticeTitle, tx, b.y + 12f, 13f, tw, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
+            coloredText(ctx, noticeSub, tx, b.y + 30f, 11f, tw, Theme.TEXT_SECONDARY)
         } else {
-            text(ctx, trim(noticeTitle, tw, 13f, Theme.FONT_SEMIBOLD), tx, cy - 13f * 0.39f, 13f, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
+            coloredText(ctx, noticeTitle, tx, cy - 13f * 0.39f, 13f, tw, Theme.TEXT_PRIMARY, Theme.FONT_SEMIBOLD)
         }
+    }
+
+    /** 一段一段画，每段自己的颜色；太长时按纯文字截断，加省略号 */
+    private fun coloredText(ctx: GuiCanvas, segs: List<ColorText.Seg>, x: Float, y: Float, size: Float, maxW: Float, def: Color, font: String = Theme.FONT_REGULAR) {
+        val plain = ColorText.plain(segs)
+        val shown = trim(plain, maxW, size, font)
+        val cut = if (shown == plain) plain.length else (shown.length - 3).coerceAtLeast(0)
+        var used = 0
+        var cx = x
+        for (seg in segs) {
+            if (used >= cut) break
+            val part = seg.text.take(cut - used)
+            text(ctx, part, cx, y, size, seg.color ?: def, font)
+            cx += width(part, size, font)
+            used += part.length
+        }
+        if (shown != plain) text(ctx, "...", cx, y, size, def, font)
     }
 
     private fun drawSong(ctx: GuiCanvas, b: LayoutBounds) {

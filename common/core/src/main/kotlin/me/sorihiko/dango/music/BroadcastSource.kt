@@ -40,6 +40,17 @@ object BroadcastSource : MusicSourceApi {
         SourceHttp.bytes(url, "")?.let { preload(url, it) }
     }
 
+    /** 开头是 ID3 标签，或前 8KB 里能找到 MP3 帧头（11 位同步标志）。网页、错误页不会通过 */
+    fun looksLikeMp3(b: ByteArray): Boolean {
+        if (b.size < 4) return false
+        if (b[0] == 'I'.code.toByte() && b[1] == 'D'.code.toByte() && b[2] == '3'.code.toByte()) return true
+        val end = minOf(b.size - 1, 8192)
+        for (i in 0 until end) {
+            if (b[i] == 0xFF.toByte() && (b[i + 1].toInt() and 0xE0) == 0xE0) return true
+        }
+        return false
+    }
+
     override fun search(query: String): List<NeteaseTrack> = emptyList()
     override fun songUrl(track: NeteaseTrack): NeteaseApi.SongUrl? = NeteaseApi.SongUrl(track.nativeId, false)
     override fun lyrics(track: NeteaseTrack): Lyrics? = lyricsByKey[track.key]

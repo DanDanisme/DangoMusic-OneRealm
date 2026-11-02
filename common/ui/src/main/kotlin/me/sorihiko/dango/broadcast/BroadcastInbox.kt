@@ -33,9 +33,23 @@ object BroadcastInbox {
         if (queue.size < 32) queue.add(json)
     }
 
+    /** 上一次已经提示过失败的歌，同一首只提示一次 */
+    private var failedKey = ""
+
+    /** 服务器推送的歌加载失败时，在灵动岛上说一声原因（之前是静默失败，不好排查） */
+    private fun watchFailure() {
+        val cur = MusicPlayer.current ?: return
+        if (cur.source != MusicSource.BROADCAST || MusicPlayer.state != MusicPlayer.State.ERROR || cur.key == failedKey) return
+        failedKey = cur.key
+        DangoLogger.warn("Broadcast music failed: {}", MusicPlayer.message)
+        DangoMusic.instance.moduleManager.get(DynamicIslandModule::class.java)
+            .showNotice("&c音乐加载失败", MusicPlayer.message.take(120), 8f)
+    }
+
     /** 游戏线程每个 tick 调用 */
     @JvmStatic
     fun process() {
+        watchFailure()
         while (true) {
             val raw = queue.poll() ?: return
             try {
@@ -51,6 +65,7 @@ object BroadcastInbox {
 
     private fun handle(o: JsonObject) {
         if (o.num("v") != 1L) return
+        DangoLogger.info("Broadcast message: {}", o.str("type"))
         when (o.str("type")) {
             "notice" -> {
                 val title = o.str("title").take(200)
