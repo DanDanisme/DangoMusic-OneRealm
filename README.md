@@ -1,3 +1,5 @@
+> **这是修改版。** 本仓库基于 [Sorihiko/DangoMusic](https://github.com/Sorihiko/DangoMusic) v1.7.2，由一方世界（OneRealm）修改，按 GPL-3.0 发布。改了什么见 [ONEREALM.md](ONEREALM.md)。不是官方版本，问题请勿打扰原作者。
+
 <p align="center"><img src="docs/logo.png" alt="Dango Music" width="220"></p>
 
 <h1 align="center">Dango Music</h1>
