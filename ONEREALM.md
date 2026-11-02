@@ -12,8 +12,9 @@
 2. **新音源 `BROADCAST`**：专门承载服务器推送的音乐，不出现在音源选择里，不能进入一起听歌。下载后会检查是否真的是 MP3。
 3. **界面精简**：移除首页和排行榜；侧栏默认进“正在播放”；一起听歌入口保留但显示“暂未开放”，不再连接任何云端；检查更新默认关闭并隐藏设置项；歌曲卡片、左上角歌曲信息及封面的设置项隐藏，默认关闭。
 4. **不含作者的服务配置**：构建产物里没有 `firebase.properties`。
+5. **本分支（`netease`）只保留网易云音乐**：删除 QQ 音乐、酷狗音乐的全部代码（音源、目录、登录、歌词、续期等）以及只给它们用的原生登录与请求类。登录界面、侧栏账号栏、一起听歌的歌曲编解码里涉及这两个平台的分支一并去掉。
 
-## 改动文件清单
+## 改动文件清单（以下为相对上一分支 `onerealm` 之外的基本改动；`netease` 分支另删除 `music/Qq*.kt`、`music/Kugou*.kt`、`NativeLogin.kt`、`NativeAccount.kt`、`AuthHttp.kt`，并修改 `MusicSources.kt`、`MusicPlayer.kt`、`ListenParty.kt`、`PartyTrackCodec.kt`、`I18n.kt`、`CoverCache.kt`、`MusicScreen.kt`、`Sidebar.kt`、`LoginDialog.kt`）
 
 新增：
 

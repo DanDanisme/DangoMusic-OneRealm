@@ -7,7 +7,7 @@ import java.security.MessageDigest
 
 /** Persistent provider names; never use a process-local counter as a song identifier. */
 enum class MusicSource(val key: String, val label: String) {
-    NETEASE("netease", "NetEase"), QQ("qq", "QQ Music"), KUGOU("kugou", "Kugou"),
+    NETEASE("netease", "NetEase"),
     /** 服务器推送的音频链接（OneRealm 改动）：不是玩家能选的音源，不出现在音源菜单里 */
     BROADCAST("broadcast", "Broadcast");
 
@@ -61,8 +61,6 @@ object MusicSources {
 
     fun api(source: MusicSource = selected): MusicSourceApi = when (source) {
         MusicSource.NETEASE -> netease
-        MusicSource.QQ -> QqMusicSource
-        MusicSource.KUGOU -> KugouMusicSource
         MusicSource.BROADCAST -> BroadcastSource
     }
 

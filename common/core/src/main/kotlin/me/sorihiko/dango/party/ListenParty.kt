@@ -118,9 +118,7 @@ object ListenParty {
     private fun newCode(): String =
         "D-" + (1..CODE_LENGTH).map { CODE_ALPHABET[rng.nextInt(CODE_ALPHABET.length)] }.joinToString("")
 
-    fun supportsSource(source: MusicSource): Boolean = source == MusicSource.NETEASE ||
-        (source == MusicSource.QQ && (role == Role.NONE || roomProtocol >= 2)) ||
-        (source == MusicSource.KUGOU && (role == Role.NONE || roomProtocol >= 3))
+    fun supportsSource(source: MusicSource): Boolean = source == MusicSource.NETEASE
 
     /**
      * 房主超过 [ABANDONED_MS] 没心跳的房间算废弃，可以被新房间接管。

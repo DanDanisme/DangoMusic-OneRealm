@@ -8,7 +8,6 @@ import me.sorihiko.dango.music.MusicScreen
 import me.sorihiko.dango.music.NeteaseApi
 import me.sorihiko.dango.music.MusicSource
 import me.sorihiko.dango.music.MusicSources
-import me.sorihiko.dango.music.NativeAccounts
 import me.sorihiko.dango.party.ListenParty
 import me.sorihiko.dango.platform.Keys
 import me.sorihiko.dango.ui.LayoutBounds
@@ -221,7 +220,7 @@ internal class Sidebar(private val screen: MusicScreen) {
         }
         ui.endClip()
         if (list.isEmpty() && (menuNow == null || listArea.y + 18f < menuNow.y)) {
-            val loggedIn = if (MusicSources.selected == MusicSource.NETEASE) NeteaseApi.loggedIn else NativeAccounts.get(MusicSources.selected) != null
+            val loggedIn = NeteaseApi.loggedIn
             val msg = if (Library.playlistsLoading) I18n.text("Loading...") else if (loggedIn) I18n.text("No playlists") else I18n.text("Log in to see your playlists")
             ui.text(msg, x + 2f, listArea.y + 6f, 11f, Theme.TEXT_TERTIARY)
             if (Library.playlistsLoading) ui.progressBar(LayoutBounds(x + 2f, listArea.y + 24f, iw - 4f, 3f), null)
@@ -267,15 +266,13 @@ internal class Sidebar(private val screen: MusicScreen) {
         Color(lerp(a.r, b.r, t), lerp(a.g, b.g, t), lerp(a.b, b.b, t), lerp(a.a, b.a, t))
 
     private fun loggedIn(source: MusicSource): Boolean =
-        if (source == MusicSource.NETEASE) NeteaseApi.loggedIn else NativeAccounts.get(source) != null
+        NeteaseApi.loggedIn
 
     /** 账号栏：头像 + 昵称（没登录时是"登录 xx"），右边是当前音源，点开菜单切换音源 / 退出登录 */
     private fun drawAccount(side: LayoutBounds) {
         val ub = LayoutBounds(side.x + 6f, side.bottom - 46f, side.width - 12f, 40f)
         val av = LayoutBounds(ub.x + 6f, ub.y + 6f, 28f, 28f)
         val source = MusicSources.selected
-        val native = source != MusicSource.NETEASE
-        val account = if (native) NativeAccounts.get(source) else null
 
         // 右边的音源按钮：当前音源名 + ⇄；登记在整行前面，点它只开关菜单
         val chipLabel = I18n.text(source.label)
@@ -289,18 +286,13 @@ internal class Sidebar(private val screen: MusicScreen) {
         ui.hits += chip to { menuOpen = !menuOpen }
 
         val textW = chip.x - 8f - (av.right + 10f)
-        if (if (native) account != null else NeteaseApi.loggedIn) {
-            val aurl = if (native) account!!.avatarUrl else NeteaseApi.avatarUrl
-            val avatarKey = if (native) "u:${source.key}:${account!!.userId}:$aurl" else "u:${NeteaseApi.userId}"
+        if (NeteaseApi.loggedIn) {
+            val aurl = NeteaseApi.avatarUrl
+            val avatarKey = "u:${NeteaseApi.userId}"
             ui.drawCover(av, if (aurl.isNotEmpty()) CoverCache.get(avatarKey, aurl) else null, 14f)
-            val who = if (native) account!!.nickname.ifEmpty { I18n.text(source.label) + " · " + account.userId }
-                else NeteaseApi.nickname.ifEmpty { I18n.text("Logged in") }
-            // 酷狗概念版：名字太长时先缩名字，"· 概念版"一直留着
-            val badge = if (native && account!!.concept) " · " + I18n.text("Lite") else ""
-            val badgeW = if (badge.isEmpty()) 0f else ui.width(badge, 12f)
-            val shown = ui.trim(who, textW - badgeW, 12f)
+            val who = NeteaseApi.nickname.ifEmpty { I18n.text("Logged in") }
+            val shown = ui.trim(who, textW, 12f)
             ui.text(shown, av.right + 10f, ub.y + 14f, 12f, Theme.TEXT_PRIMARY)
-            if (badge.isNotEmpty()) ui.text(badge, av.right + 10f + ui.width(shown, 12f), ub.y + 14f, 12f, Theme.TEXT_SECONDARY)
         } else {
             // 没登录：只有头像 + "登录"这一块是按钮，不是整行
             val label = ui.trim(I18n.text("Log in"), textW, 12f, Theme.FONT_SEMIBOLD)
@@ -415,7 +407,7 @@ internal class Sidebar(private val screen: MusicScreen) {
                 hits += row0 to {
                     menuOpen = false
                     try {
-                        if (current == MusicSource.NETEASE) NeteaseApi.logout() else NativeAccounts.logout(current)
+                        NeteaseApi.logout()
                         Library.refreshAll()
                     } catch (_: Exception) { Library.showStatus("Unable to clear the saved login. Please try again.") }
                 }

@@ -73,7 +73,6 @@ class MusicScreen(
         if (ScreenState.context == null) ScreenState.context = DangoClient.gfx.newCanvas()
         openedAt = System.currentTimeMillis()
         Library.ensureSource()
-        NativeAccounts.refreshProfile(MusicSources.selected)
         if (Library.playlists.isEmpty()) Library.reloadPlaylists()
         else if (Library.stale) Library.softRefresh()
         Library.loadRecommend()
@@ -100,7 +99,6 @@ class MusicScreen(
     internal fun selectSource(source: MusicSource) {
         if (source == MusicSources.selected) return
         module.selectSource(source)
-        NativeAccounts.refreshProfile(source)
         sidebar.searchText = ""
         sidebar.searchFocused = false
         ScreenState.lastQuery = ""
