@@ -5,7 +5,7 @@ import me.sorihiko.dango.utils.Color
 /**
  * 公告文字里的颜色标记（OneRealm 改动），写法和 Minecraft 一致：
  *   &0～&f 或 §0～§f：16 种标准颜色；&#RRGGBB：任意颜色；&r：回到默认颜色。
- * 例：`&c新年&6快乐 &#00ccff一方世界`。不认识的标记原样显示。
+ * 例：`&c新年&6快乐 &#00ccff欢迎光临`。不认识的标记原样显示。
  */
 object ColorText {
 
