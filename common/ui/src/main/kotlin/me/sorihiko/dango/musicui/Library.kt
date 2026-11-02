@@ -18,10 +18,10 @@ internal enum class Page { HOME, CHARTS, PLAYLIST, SEARCH, QUEUE, PARTY, SETTING
 
 /** 关掉播放器再打开时还保留的界面状态 */
 internal object ScreenState {
-    var page = Page.HOME
+    var page = Page.QUEUE
     /** 设置页：0 = Lyrics，1 = Music & HUD；以及从哪一页点进来的 */
     var settingsTab = 0
-    var settingsBack = Page.HOME
+    var settingsBack = Page.QUEUE
     var backPage: Page? = null
     var opened: NeteasePlaylist? = null
     /** 歌单页显示方式：false = 列表，true = 封面墙 */
@@ -189,8 +189,6 @@ internal object Library {
         charts = null; chartsLoading = false
         searchResults = null; searching = false; searchError = ""; status = ""
         reloadPlaylists()
-        loadRecommend()
-        if (ScreenState.page == Page.CHARTS) loadCharts()
     }
 
     fun showStatus(message: String) { status = message }

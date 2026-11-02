@@ -106,7 +106,7 @@ class MusicScreen(
         ScreenState.lastQuery = ""
         ScreenState.opened = null
         Library.ensureSource()
-        go(Page.HOME)
+        go(Page.QUEUE)
     }
 
     internal fun go(p: Page) {
@@ -116,8 +116,6 @@ class MusicScreen(
         tracks.resetScroll()
         grid.resetScroll()
         when (p) {
-            Page.HOME -> Library.loadRecommend()
-            Page.CHARTS -> Library.loadCharts()
             Page.QUEUE -> if (ScreenState.coverView) tracks.focusCurrentInCoverflow()
             else -> {}
         }
@@ -134,7 +132,7 @@ class MusicScreen(
     }
 
     internal fun goBackOrHome() {
-        if (ScreenState.backPage != null) goBack() else go(Page.HOME)
+        if (ScreenState.backPage != null) goBack() else go(Page.QUEUE)
     }
 
     internal fun openPlaylist(p: NeteasePlaylist, from: Page?) {
@@ -299,17 +297,10 @@ class MusicScreen(
         }
 
         when (s.page) {
-            Page.HOME -> {
-                val rec = Library.recommend
-                val items = if (rec.isNullOrEmpty()) Library.playlists else rec
-                val label = if (rec.isNullOrEmpty()) I18n.text("Your playlists") else I18n.text("Recommended playlists")
-                grid.draw(body, I18n.text("Welcome to Dango Music!"), "$label · ${items.size}", items, Library.recommendLoading && items.isEmpty())
+            Page.PARTY -> {
+                ui.text(I18n.text("Listen Together"), body.x, body.y, 22f, Theme.TEXT_PRIMARY, Theme.FONT_DISPLAY)
+                ui.text("暂未开放", body.x, body.y + 34f, 12f, Theme.TEXT_SECONDARY, Theme.FONT_MEDIUM)
             }
-            Page.CHARTS -> {
-                val c = Library.charts ?: emptyList()
-                grid.draw(body, I18n.text("Charts"), I18n.format("%d charts", c.size), c, Library.chartsLoading)
-            }
-            Page.PARTY -> ui.itemAnim(0) { party.draw(body) }
             Page.SETTINGS -> settings.draw(body)
             else -> tracks.draw(body)
         }

@@ -102,7 +102,7 @@ class NeteaseMusicModule : Module() {
     private val envRays = BooleanValue(false)
 
     @ModuleValue("Check for updates", "Look for a newer release on GitHub once per launch and remind you")
-    val checkUpdates = BooleanValue(true)
+    val checkUpdates = BooleanValue(false)
 
     private val keyBindings by lazy {
         listOf(
@@ -271,7 +271,7 @@ class NeteaseMusicModule : Module() {
         applyLanguage()
         MusicSources.selected = MusicSource.values()[musicSource.value]
         DangoMusic.instance.platform.syncKeyBindings(keyBindings)
-        UpdateChecker.tick(checkUpdates.get())
+        UpdateChecker.tick(false)
         if (!enabled) return
         // 歌词模块一直开着（显示与否由 3D lyrics 控制）；等配置读回之后再检查
         if (++tickCount > 5) lyrics()?.let { if (!it.enabled) it.enabled = true }

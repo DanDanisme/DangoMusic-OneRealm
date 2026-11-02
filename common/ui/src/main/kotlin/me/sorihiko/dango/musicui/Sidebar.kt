@@ -175,9 +175,7 @@ internal class Sidebar(private val screen: MusicScreen) {
         }
 
         section("DANGO MUSIC")
-        nav("⌂", I18n.text("Home"), page == Page.HOME, true) { screen.go(Page.HOME) }
         section(I18n.text("DISCOVER"))
-        nav("▤", I18n.text("Charts"), page == Page.CHARTS, false) { screen.go(Page.CHARTS) }
         nav("♫", I18n.text("Now Playing"), page == Page.QUEUE, false) { screen.go(Page.QUEUE) }
         nav("♬", if (ListenParty.role == ListenParty.Role.NONE) I18n.text("Listen Together") else I18n.text("Listen Together · ") + ListenParty.members.size,
             page == Page.PARTY, ListenParty.role != ListenParty.Role.NONE) { screen.go(Page.PARTY) }

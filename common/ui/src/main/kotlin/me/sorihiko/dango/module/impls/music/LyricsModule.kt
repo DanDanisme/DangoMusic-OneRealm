@@ -74,7 +74,7 @@ class LyricsModule : Module() {
     private val nowPlaying = BooleanValue(false)
 
     @ModuleValue("Show cover", "Show the album cover in the top left")
-    private val showCover = BooleanValue(true)
+    private val showCover = BooleanValue(false)
 
     @ModuleValue("Scale", "Lyrics size")
     private val scale = FloatValue(0.5f, 3f, 1f, 1)

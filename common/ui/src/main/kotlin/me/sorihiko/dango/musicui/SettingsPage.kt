@@ -7,7 +7,6 @@ import me.sorihiko.dango.module.Module
 import me.sorihiko.dango.module.impls.music.DynamicIslandModule
 import me.sorihiko.dango.module.impls.music.LyricsModule
 import me.sorihiko.dango.module.impls.music.NeteaseMusicModule
-import me.sorihiko.dango.module.impls.music.SongCardModule
 import me.sorihiko.dango.module.values.BooleanValue
 import me.sorihiko.dango.module.values.ColorValue
 import me.sorihiko.dango.module.values.FloatValue
@@ -253,7 +252,7 @@ internal class SettingsPage(private val screen: MusicScreen, private val module:
             Group("Dance", "Mobs on the beat", ly.m, false, ly.take(listOf("dance", "danceAuto", "danceTap", "danceSpin", "danceAmount", "danceOffset"))),
         )
         // 左上角的原版风格"正在播放"和 Song card 是同一类东西，放到 Music & HUD 里
-        val nowPlaying = Group("Song info", "Top left, classic style", ly.m, false, ly.take(listOf("nowPlaying", "showCover")))
+        ly.take(listOf("nowPlaying", "showCover"))   // 歌曲信息显示/封面：默认关闭并隐藏，取走只是不让它落进 Other 组
         ly.take().let { if (it.isNotEmpty()) lyrics += Group("Other", "More", ly.m, false, it) }
 
         val player = Src(module,
@@ -262,19 +261,15 @@ internal class SettingsPage(private val screen: MusicScreen, private val module:
         player.left.remove("shuffle")   // 随机播放用播放栏上的按钮就够了，设置页不再显示（状态照样保存）
         player.left.remove("repeatOne") // 单曲循环同样通过播放栏控制
         player.left.remove("musicSource") // 音源通过侧栏切换。
-        val card = Src(mm.get(SongCardModule::class.java), fmts = mapOf("posX" to ::percent, "posY" to ::percent))
         val island = Src(mm.get(DynamicIslandModule::class.java), fmts = mapOf("notifyTime" to { v: Any -> "%.1f s".format((v as FloatValue).value) }))
         // 先取走，免得落进下面的 Hotkeys 组
-        val updates = player.take(listOf("checkUpdates"))
+        player.take(listOf("checkUpdates"))   // 检查更新已停用，取走只是不让它落进 Hotkeys 组
         val environment = player.take(listOf("envAudio", "envRain", "envStrength", "envRays"))
         val music = listOf(
             Group("Player", "Playback", player.m, false, player.take(listOf("volume", "normalize", "language"))),
             Group("Environment audio", "Sound around you", player.m, false, environment),
             Group("Hotkeys", "Click, then press a key · Backspace clears", player.m, false, player.take()),
-            Group("Song card", "Overlay", card.m, true, card.take()),
-            nowPlaying,
             Group("Dynamic Island", "Overlay", island.m, true, island.take()),
-            Group("Updates", "GitHub releases", player.m, false, updates),
         )
         return listOf(lyrics, music)
     }
